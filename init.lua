@@ -38,6 +38,7 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-telescope/telescope.nvim",          version = "0.1.8" },
 	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
 	{ src = "https://github.com/aznhe21/actions-preview.nvim" },
+	{src = "https://github.com/supermaven-inc/supermaven-nvim"},
 })
 
 
@@ -82,7 +83,6 @@ local telescope = require("telescope")
 telescope.setup({
 	defaults = {
 		preview = { treesitter = false },
-		color_devicons = true,
 		sorting_strategy = "ascending",
 		borderchars = {
 			"─", -- top
@@ -121,7 +121,6 @@ require("oil").setup({
 		autosave_changes = true,
 	},
 	columns = {
-		"icon",
 		"permissions",
 	},
 	float = {
@@ -163,6 +162,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 vim.cmd [[set completeopt+=menuone,noselect,popup]]
+--supermaven
+require('supermaven-nvim').setup({})
+
 require "vague".setup({ transparent = true })
 vim.cmd("colorscheme vague")
 --vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
