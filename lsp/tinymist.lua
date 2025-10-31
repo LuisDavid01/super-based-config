@@ -37,7 +37,7 @@ local function create_tinymist_command(command_name, client, bufnr)
     }, { bufnr = bufnr }, handler)
   end
   -- Construct a readable command name/desc
-  local cmd_name = export_type and ('TinymistExport' .. cmd_display) or ('Tinymist' .. cmd_display) ---@type string
+  local cmd_name = export_type and ('Export' .. cmd_display) or ('Tinymist' .. cmd_display) ---@type string
   local cmd_desc = export_type and ('Export to ' .. cmd_display) or ('Get ' .. cmd_display) ---@type string
   return run_tinymist_command, cmd_name, cmd_desc
 end
@@ -47,6 +47,9 @@ return {
   cmd = { 'tinymist' },
   filetypes = { 'typst' },
   root_markers = { '.git' },
+  settings = {
+	  formatterMode = "typstyle"
+  },
   on_attach = function(client, bufnr)
     for _, command in ipairs {
       'tinymist.exportSvg',

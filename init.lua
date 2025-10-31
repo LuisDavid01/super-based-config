@@ -19,10 +19,12 @@ vim.keymap.set('n', '<leader>o', ':update<CR> :source<CR>')
 vim.keymap.set('n', '<leader>w', ':write<CR>')
 vim.keymap.set('n', '<leader>q', ':quit<CR>')
 vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
+vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, {silent = true, noremap = true})
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {silent = true, noremap = true})
 -- Picker para archivos
 vim.keymap.set('n', '<leader>pf', ":Pick files<CR>")
 vim.keymap.set('n', '<leader>ph', ":Pick help<CR>")
-vim.keymap.set('n', '<leader>e', ":Oil<CR>")
+vim.keymap.set('n', '<leader>pv', ":Oil<CR>")
 vim.keymap.set({ 'n', 'v' }, '<leader>y', [["+y]])
 vim.pack.add({
 	{ src = "https://github.com/vague2k/vague.nvim" },
@@ -38,8 +40,10 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-telescope/telescope.nvim",          version = "0.1.8" },
 	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
 	{ src = "https://github.com/aznhe21/actions-preview.nvim" },
-	{src = "https://github.com/supermaven-inc/supermaven-nvim"},
+	{ src = "https://github.com/supermaven-inc/supermaven-nvim" },
+	{src= "https://github.com/tpope/vim-fugitive"},
 })
+
 
 
 require "marks".setup {
@@ -50,6 +54,9 @@ require "marks".setup {
 	excluded_buftypes = {},
 	mappings = {}
 }
+
+
+
 --snips
 require("luasnip").setup({ enable_autosnippets = true })
 require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets/" })
@@ -115,13 +122,27 @@ require("actions-preview").setup {
 }
 --oil
 require("oil").setup({
+	 win_options = {
+    wrap = false,
+    signcolumn = "no",
+    cursorcolumn = false,
+    foldcolumn = "0",
+    spell = false,
+    list = false,
+    conceallevel = 3,
+    concealcursor = "nvic",
+  },
 	lsp_file_methods = {
 		enabled = true,
 		timeout_ms = 1000,
 		autosave_changes = true,
 	},
 	columns = {
-		"permissions",
+		"icon",
+	},
+	view_options = {
+		show_icons = true,
+		show_hidden = true,
 	},
 	float = {
 		max_width = 0.7,
@@ -140,7 +161,8 @@ require "mini.pick".setup()
 vim.lsp.enable({ "lua_ls", "ts_ls", "gopls", "r_language_server", "clangd", "emmet_ls", "elixirls",
 	"rust_analyzer" })
 
-
+-- fugitive
+vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
 vim.api.nvim_create_autocmd('LspAttach', {
 
 	group = vim.api.nvim_create_augroup('my.lsp', {}),
@@ -164,6 +186,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
 vim.cmd [[set completeopt+=menuone,noselect,popup]]
 --supermaven
 require('supermaven-nvim').setup({})
+
+
+
+
 
 require "vague".setup({ transparent = true })
 vim.cmd("colorscheme vague")
