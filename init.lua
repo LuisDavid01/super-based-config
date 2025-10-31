@@ -21,6 +21,17 @@ vim.keymap.set('n', '<leader>q', ':quit<CR>')
 vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
 vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, {silent = true, noremap = true})
 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {silent = true, noremap = true})
+-- greatest remap ever imo
+vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  float = {
+	source = "always", border = "rounded",
+  },
+})
+
 -- Picker para archivos
 vim.keymap.set('n', '<leader>pf', ":Pick files<CR>")
 vim.keymap.set('n', '<leader>ph', ":Pick help<CR>")
