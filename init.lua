@@ -24,6 +24,10 @@ vim.keymap.set('n', '<leader>pf', ":Pick files<CR>")
 vim.keymap.set('n', '<leader>ph', ":Pick help<CR>")
 vim.keymap.set('n', '<leader>e', ":Oil<CR>")
 vim.keymap.set({ 'n', 'v' }, '<leader>y', [["+y]])
+vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, {silent = true, noremap = true})
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {silent = true, noremap = true})
+-- greatest remap ever imo
+vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.pack.add({
 	{ src = "https://github.com/vague2k/vague.nvim" },
 	{ src = "https://github.com/nvim-mini/mini.pick" },
@@ -44,7 +48,11 @@ map({"i", "s"}, "<C-j>", function() ls.jump(1) end, {silent = true})
 map({"i", "s"}, "<C-k>", function() ls.jump(-1) end, {silent = true})
 require "mason".setup()
 require "mini.pick".setup()
-require "oil".setup()
+require "oil".setup({
+	view_options = {
+		show_hidden = true,
+	},
+})
 vim.lsp.enable({ "lua_ls", "ts_ls" })
 
 
