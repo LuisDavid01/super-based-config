@@ -24,6 +24,22 @@ vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {silent = true, norem
 -- greatest remap ever imo
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
+vim.api.nvim_create_autocmd('LspAttach', {
+	group = vim.api.nvim_create_augroup('UserLspConfig', { clear = true }),
+	callback = function(ev)
+		local opts = { buffer = ev.buf, silent = true }
+		-- Keymaps para buffers con LSP
+		vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, opts)
+		vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+		vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+		vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts)
+		vim.keymap.set('n', '<leader>f', function()
+			vim.lsp.buf.format { async = true }
+		end, opts)
+		vim.keymap.set('n', '<leader>gr', require('telescope.builtin').lsp_references, opts)
+	end,
+})
+
 vim.diagnostic.config({
   virtual_text = true,
   signs = true,
@@ -45,6 +61,7 @@ vim.pack.add({
 	{ src = "https://github.com/chomosuke/typst-preview.nvim" },
 	{ src = "https://github.com/mason-org/mason.nvim" },
 	{ src = "https://github.com/L3MON4D3/LuaSnip" },
+	{ src = "https://github.com/neovim/nvim-lspconfig" },
 	{ src = "https://github.com/nvim-lua/plenary.nvim" },
 	{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
@@ -77,22 +94,19 @@ local map = vim.keymap.set
 --treesitter
 require 'nvim-treesitter.config'.setup({
 	install_dir = vim.fn.stdpath('data') .. '/site',
-	ensure_installed = { "elixir", "typescript", "javascript", "go", "r", "clangd", "astro", "heex", "eex", },
+	ensure_installed = { "elixir", "typescript", "javascript", "go", "r", "clangd", "astro", "heex", "eex", "solidity"},
 	highlight = { enable = true },
 })
 
-
-require 'nvim-treesitter'.install { 'rust', 'javascript', 'zig', 'lua', 'elixir', 'markdown', 'docker', 'makefile', 'vim',
-	'typescript', 'json', 'yaml', 'html', 'css', 'tsx', 'go', 'heex', 'eex', 'c'
-, 'r' }
-
+--[[
 vim.api.nvim_create_autocmd('FileType', {
 	pattern = { 'rust', 'javascript', 'zig', 'lua', 'elixir', 'markdown', 'docker', 'makefile', 'vim',
-		'typescript', 'json', 'yaml', 'html', 'css', 'tsx', 'go', 'heex', 'eex', 'c', 'r' },
+		'typescript', 'json', 'yaml', 'html', 'css', 'tsx', 'go', 'heex', 'eex', 'c', 'r','sol' },
 	callback = function()
 		vim.treesitter.start()
 	end,
 })
+]]--
 
 
 
@@ -163,37 +177,34 @@ require("oil").setup({
 
 })
 
-
 map({ "i" }, "<C-e>", function() ls.expand() end, { silent = true })
 map({ "i", "s" }, "<C-j>", function() ls.jump(1) end, { silent = true })
 map({ "i", "s" }, "<C-k>", function() ls.jump(-1) end, { silent = true })
 require "mason".setup()
 require "mini.pick".setup()
-vim.lsp.enable({ "lua_ls", "ts_ls", "gopls", "r_language_server", "clangd", "emmet_ls", "elixirls",
-	"rust_analyzer" })
+
 
 -- fugitive
 vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
+
 vim.api.nvim_create_autocmd('LspAttach', {
-
 	group = vim.api.nvim_create_augroup('my.lsp', {}),
-
 	callback = function(args)
 		local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
-
 		if client:supports_method('textDocument/completion') then
 			-- Optional: trigger autocompletion on EVERY keypress. May be slow!
-
 			local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
-
 			client.server_capabilities.completionProvider.triggerCharacters = chars
-
 			vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
 		end
 	end,
-
 })
 
+vim.lsp.enable({
+	"lua_ls", "cssls", "gopls", "tinymist",
+	"rust_analyzer", "clangd", "astro","ts_ls", "emmet_ls",
+	"solidity_ls_nomicfoundation"
+})
 vim.cmd [[set completeopt+=menuone,noselect,popup]]
 --supermaven
 require('supermaven-nvim').setup({})
