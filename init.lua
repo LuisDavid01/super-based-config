@@ -18,9 +18,6 @@ vim.g.mapleader = " "
 vim.keymap.set('n', '<leader>o', ':update<CR> :source<CR>')
 vim.keymap.set('n', '<leader>w', ':write<CR>')
 vim.keymap.set('n', '<leader>q', ':quit<CR>')
-vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
-vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, {silent = true, noremap = true})
-vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {silent = true, noremap = true})
 -- greatest remap ever imo
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
@@ -41,11 +38,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 vim.diagnostic.config({
-  virtual_text = true,
-  signs = true,
-  float = {
-	source = "always", border = "rounded",
-  },
+	virtual_text = true,
+	signs = true,
+	float = {
+		source = "always", border = "rounded",
+	},
 })
 
 -- Picker para archivos
@@ -56,7 +53,6 @@ vim.keymap.set({ 'n', 'v' }, '<leader>y', [["+y]])
 vim.pack.add({
 	{ src = "https://github.com/vague2k/vague.nvim" },
 	{ src = "https://github.com/nvim-mini/mini.pick" },
-	{ src = "https://github.com/chentoast/marks.nvim" },
 	{ src = "https://github.com/stevearc/oil.nvim" },
 	{ src = "https://github.com/chomosuke/typst-preview.nvim" },
 	{ src = "https://github.com/mason-org/mason.nvim" },
@@ -69,44 +65,35 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
 	{ src = "https://github.com/aznhe21/actions-preview.nvim" },
 	{ src = "https://github.com/supermaven-inc/supermaven-nvim" },
-	{src= "https://github.com/tpope/vim-fugitive"},
+	{ src = "https://github.com/tpope/vim-fugitive" },
 })
 
 
 
-require "marks".setup {
-	builtin_marks = { "<", ">", "^" },
-	refresh_interval = 250,
-	sign_priority = { lower = 10, upper = 15, builtin = 8, bookmark = 20 },
-	excluded_filetypes = {},
-	excluded_buftypes = {},
-	mappings = {}
-}
 
 
 
 --snips
 require("luasnip").setup({ enable_autosnippets = true })
-require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets/" })
+require("luasnip.loaders.from_lua").load({ paths = "~/appdata/local/nvim/snippets/" })
 local ls = require('luasnip')
 local map = vim.keymap.set
 
 --treesitter
 require 'nvim-treesitter.config'.setup({
 	install_dir = vim.fn.stdpath('data') .. '/site',
-	ensure_installed = { "elixir", "typescript", "javascript", "go", "r", "clangd", "astro", "heex", "eex", "solidity"},
+	ensure_installed = { "elixir", "typescript", "javascript", "go", "r", "clangd",
+		"astro", "heex", "eex", "python", "prisma" },
 	highlight = { enable = true },
 })
 
---[[
 vim.api.nvim_create_autocmd('FileType', {
-	pattern = { 'rust', 'javascript', 'zig', 'lua', 'elixir', 'markdown', 'docker', 'makefile', 'vim',
-		'typescript', 'json', 'yaml', 'html', 'css', 'tsx', 'go', 'heex', 'eex', 'c', 'r','sol' },
+	pattern = { 'rust', 'javascript', 'zig', 'lua', 'elixir', 'markdown', 'docker', 'makefile',
+		'typescript', 'json', 'yaml', 'html', 'css', 'tsx', 'go', 'heex', 'eex', 'c', 'r', 'python','prisma' },
 	callback = function()
 		vim.treesitter.start()
 	end,
 })
-]]--
 
 
 
@@ -147,16 +134,16 @@ require("actions-preview").setup {
 }
 --oil
 require("oil").setup({
-	 win_options = {
-    wrap = false,
-    signcolumn = "no",
-    cursorcolumn = false,
-    foldcolumn = "0",
-    spell = false,
-    list = false,
-    conceallevel = 3,
-    concealcursor = "nvic",
-  },
+	win_options = {
+		wrap = false,
+		signcolumn = "no",
+		cursorcolumn = false,
+		foldcolumn = "0",
+		spell = false,
+		list = false,
+		conceallevel = 3,
+		concealcursor = "nvic",
+	},
 	lsp_file_methods = {
 		enabled = true,
 		timeout_ms = 1000,
@@ -202,8 +189,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
 vim.lsp.enable({
 	"lua_ls", "cssls", "gopls", "tinymist",
-	"rust_analyzer", "clangd", "astro","ts_ls", "emmet_ls",
-	"solidity_ls_nomicfoundation"
+	"rust_analyzer", "clangd", "astro", "ts_ls", "emmet_ls",
+	"pyright", "prismals"
 })
 vim.cmd [[set completeopt+=menuone,noselect,popup]]
 --supermaven
@@ -215,7 +202,5 @@ require('supermaven-nvim').setup({})
 
 require "vague".setup({ transparent = true })
 vim.cmd("colorscheme vague")
---vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
---vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
 vim.cmd(":hi statusline guibg=NONE")
