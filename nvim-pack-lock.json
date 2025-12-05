@@ -10,7 +10,8 @@
     },
     "harpoon": {
       "rev": "1bc17e3",
-      "src": "https://github.com/ThePrimeagen/harpoon"
+      "src": "https://github.com/ThePrimeagen/harpoon",
+      "version": "'harpoon2'"
     },
     "marks.nvim": {
       "rev": "f353e8c",
